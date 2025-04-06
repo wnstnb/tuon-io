@@ -5,6 +5,8 @@ import { ArtifactCodeV3, ArtifactMarkdownV3 } from "@opencanvas/shared/types";
 import { Assistant } from "@langchain/langgraph-sdk";
 import { PanelRightClose } from "lucide-react";
 import { TooltipIconButton } from "@/components/ui/assistant-ui/tooltip-icon-button";
+import { useGraphContext } from "@/contexts/GraphContext";
+import { Badge } from "@/components/ui/badge";
 
 interface ArtifactHeaderProps {
   isBackwardsDisabled: boolean;
@@ -20,6 +22,8 @@ interface ArtifactHeaderProps {
 }
 
 export function ArtifactHeader(props: ArtifactHeaderProps) {
+  const { graphData: { threadSwitched } } = useGraphContext();
+
   return (
     <div className="flex flex-row items-center justify-between">
       <div className="flex flex-row items-center justify-center gap-2">
@@ -31,7 +35,7 @@ export function ArtifactHeader(props: ArtifactHeaderProps) {
             delayDuration={400}
             onClick={() => props.setChatCollapsed(false)}
           >
-            <PanelRightClose className="text-gray-600" />
+            <PanelRightClose className="text-foreground" />
           </TooltipIconButton>
         )}
         <ArtifactTitle
@@ -39,6 +43,9 @@ export function ArtifactHeader(props: ArtifactHeaderProps) {
           isArtifactSaved={props.isArtifactSaved}
           artifactUpdateFailed={props.artifactUpdateFailed}
         />
+        {threadSwitched && (
+          <Badge variant="outline" className="ml-2">Historical Document</Badge>
+        )}
       </div>
       <div className="flex gap-2 items-end mt-[10px] mr-[6px]">
         <NavigateArtifactHistory

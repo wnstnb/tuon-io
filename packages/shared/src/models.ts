@@ -44,26 +44,26 @@ const OPENAI_MODELS: ModelConfigurationParams[] = [
     },
     isNew: false,
   },
-  {
-    name: "gpt-4o-mini",
-    label: "GPT 4o mini",
-    config: {
-      provider: "openai",
-      temperatureRange: {
-        min: 0,
-        max: 1,
-        default: 0.5,
-        current: 0.5,
-      },
-      maxTokens: {
-        min: 1,
-        max: 16384,
-        default: 4096,
-        current: 4096,
-      },
-    },
-    isNew: false,
-  },
+  // {
+  //   name: "gpt-4o-mini",
+  //   label: "GPT 4o mini",
+  //   config: {
+  //     provider: "openai",
+  //     temperatureRange: {
+  //       min: 0,
+  //       max: 1,
+  //       default: 0.5,
+  //       current: 0.5,
+  //     },
+  //     maxTokens: {
+  //       min: 1,
+  //       max: 16384,
+  //       default: 4096,
+  //       current: 4096,
+  //     },
+  //   },
+  //   isNew: false,
+  // },
   {
     name: "gpt-4.5-preview",
     label: "GPT 4.5",
@@ -124,26 +124,26 @@ const OPENAI_MODELS: ModelConfigurationParams[] = [
     },
     isNew: true,
   },
-  {
-    name: "o1",
-    label: "o1",
-    config: {
-      provider: "openai",
-      temperatureRange: {
-        min: 0,
-        max: 1,
-        default: 0.5,
-        current: 0.5,
-      },
-      maxTokens: {
-        min: 1,
-        max: 100000,
-        default: 4096,
-        current: 4096,
-      },
-    },
-    isNew: true,
-  },
+  // {
+  //   name: "o1",
+  //   label: "o1",
+  //   config: {
+  //     provider: "openai",
+  //     temperatureRange: {
+  //       min: 0,
+  //       max: 1,
+  //       default: 0.5,
+  //       current: 0.5,
+  //     },
+  //     maxTokens: {
+  //       min: 1,
+  //       max: 100000,
+  //       default: 4096,
+  //       current: 4096,
+  //     },
+  //   },
+  //   isNew: true,
+  // },
 ];
 
 /**
@@ -430,7 +430,7 @@ export const LANGCHAIN_USER_ONLY_MODELS = [
   "gpt-4.5-preview",
   "claude-3-5-sonnet-latest",
   "claude-3-7-sonnet-latest",
-  "gemini-2.0-flash-thinking-exp-01-21",
+  "gemini-2.0-flash",
 ];
 
 // Models which do NOT support the temperature parameter.

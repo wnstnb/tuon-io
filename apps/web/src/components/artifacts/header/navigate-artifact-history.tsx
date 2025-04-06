@@ -30,7 +30,7 @@ export function NavigateArtifactHistory(props: NavigateArtifactHistoryProps) {
       >
         <Forward
           aria-disabled={props.isBackwardsDisabled}
-          className="w-6 h-6 text-gray-600 scale-x-[-1]"
+          className="w-6 h-6 text-foreground scale-x-[-1]"
         />
       </TooltipIconButton>
       <TooltipIconButton
@@ -48,7 +48,7 @@ export function NavigateArtifactHistory(props: NavigateArtifactHistoryProps) {
       >
         <Forward
           aria-disabled={props.isForwardDisabled}
-          className="w-6 h-6 text-gray-600"
+          className="w-6 h-6 text-foreground"
         />
       </TooltipIconButton>
     </div>

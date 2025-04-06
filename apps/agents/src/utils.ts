@@ -265,7 +265,7 @@ export const getModelConfig = (
     let actualModelName = providerConfig.modelName;
     if (extra?.isToolCalling && actualModelName.includes("thinking")) {
       // Gemini thinking does not support tools.
-      actualModelName = "gemini-2.0-flash-exp";
+      actualModelName = "gemini-2.0-flash";
     }
     return {
       ...providerConfig,
@@ -279,7 +279,7 @@ export const getModelConfig = (
     let actualModelName = providerConfig.modelName;
     if (extra?.isToolCalling && actualModelName.includes("thinking")) {
       // Gemini thinking does not support tools.
-      actualModelName = "gemini-2.0-flash-exp";
+      actualModelName = "gemini-2.0-flash";
     }
     return {
       ...providerConfig,

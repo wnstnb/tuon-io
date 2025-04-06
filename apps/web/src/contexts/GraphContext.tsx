@@ -77,6 +77,7 @@ interface GraphData {
   artifactUpdateFailed: boolean;
   chatStarted: boolean;
   searchEnabled: boolean;
+  threadSwitched: boolean;
   setSearchEnabled: Dispatch<SetStateAction<boolean>>;
   setChatStarted: Dispatch<SetStateAction<boolean>>;
   setIsStreaming: Dispatch<SetStateAction<boolean>>;
@@ -112,6 +113,17 @@ function extractStreamDataOutput(output: any) {
   }
   return output;
 }
+
+// Add a function to get only the most recent conversation messages
+const getRecentMessages = (messages: Record<string, any>[]) => {
+  // If there are fewer than 10 messages, return all of them
+  if (!messages || messages.length <= 10) {
+    return messages;
+  }
+  
+  // Otherwise, return the last 10 messages
+  return messages.slice(messages.length - 10);
+};
 
 export function GraphProvider({ children }: { children: ReactNode }) {
   const userData = useUserContext();
@@ -1394,8 +1406,11 @@ export function GraphProvider({ children }: { children: ReactNode }) {
       return;
     }
     setArtifact(castValues?.artifact);
+    
+    // Only set the most recent messages to avoid context splitting
+    const recentMessages = getRecentMessages(castValues.messages);
     setMessages(
-      castValues.messages.map((msg: Record<string, any>) => {
+      recentMessages.map((msg: Record<string, any>) => {
         if (msg.response_metadata?.langSmithRunURL) {
           msg.tool_calls = msg.tool_calls ?? [];
           msg.tool_calls.push({
@@ -1426,6 +1441,7 @@ export function GraphProvider({ children }: { children: ReactNode }) {
       chatStarted,
       artifactUpdateFailed,
       searchEnabled,
+      threadSwitched,
       setSearchEnabled,
       setChatStarted,
       setIsStreaming,

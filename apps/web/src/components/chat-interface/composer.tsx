@@ -74,7 +74,7 @@ export const Composer: FC<ComposerProps> = (props: ComposerProps) => {
 
   return (
     <DragAndDropWrapper>
-      <ComposerPrimitive.Root className="focus-within:border-aui-ring/20 flex flex-col w-full min-h-[64px] flex-wrap items-center justify-center border px-2.5 shadow-sm transition-colors ease-in bg-white rounded-2xl">
+      <ComposerPrimitive.Root className="focus-within:border-aui-ring/20 flex flex-col w-full min-h-[64px] flex-wrap items-center justify-center border border-border px-2.5 shadow-sm transition-colors ease-in bg-background rounded-2xl dark:border-border">
         <div className="flex flex-wrap gap-2 items-start mr-auto">
           <ComposerAttachments />
         </div>
@@ -88,7 +88,7 @@ export const Composer: FC<ComposerProps> = (props: ComposerProps) => {
             autoFocus
             placeholder={placeholder}
             rows={1}
-            className="placeholder:text-muted-foreground max-h-40 flex-grow resize-none border-none bg-transparent px-2 py-4 text-sm outline-none focus:ring-0 disabled:cursor-not-allowed"
+            className="placeholder:text-muted-foreground text-foreground dark:text-foreground max-h-40 flex-grow resize-none border-none bg-transparent px-2 py-4 text-sm outline-none focus:ring-0 disabled:cursor-not-allowed"
           />
           <ThreadPrimitive.If running={false}>
             <ComposerPrimitive.Send asChild>

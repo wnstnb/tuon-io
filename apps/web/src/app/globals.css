@@ -37,6 +37,22 @@ a {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+
+  .shadow-inner-right {
+    box-shadow: inset -9px 0 6px -1px rgb(0 0 0 / 0.02);
+  }
+
+  .shadow-inner-left {
+    box-shadow: inset 9px 0 6px -1px rgb(0 0 0 / 0.02);
+  }
+  
+  .dark .shadow-inner-right {
+    box-shadow: inset -9px 0 6px -1px rgb(255 255 255 / 0.02);
+  }
+
+  .dark .shadow-inner-left {
+    box-shadow: inset 9px 0 6px -1px rgb(255 255 255 / 0.02);
+  }
 }
 
 @layer base {
@@ -127,16 +143,6 @@ a {
   background-color: rgba(53, 151, 147, 0.3);
 }
 
-@layer utilities {
-  .shadow-inner-right {
-    box-shadow: inset -9px 0 6px -1px rgb(0 0 0 / 0.02);
-  }
-
-  .shadow-inner-left {
-    box-shadow: inset 9px 0 6px -1px rgb(0 0 0 / 0.02);
-  }
-}
-
 .artifact-content {
   line-height: calc(
     1.625em + 2px
@@ -145,22 +151,113 @@ a {
 
 .inline-code {
   font-family: monospace;
-  background-color: #f0f0f0;
+  background-color: hsl(var(--muted));
   padding: 2px 4px;
   border-radius: 4px;
   font-size: 0.9em;
 }
 
 .custom-blocknote-theme {
-  --bn-colors-editor-text: #3f3f3f;
+  --bn-colors-editor-text: hsl(var(--foreground));
+  --bn-colors-text: hsl(var(--foreground));
+  --bn-colors-editor-background: transparent;
+  --bn-colors-surface: transparent;
+  --bn-colors-menu-background: hsl(var(--background));
+  --bn-colors-tooltip-background: hsl(var(--background));
+  --bn-colors-selection-background: rgba(53, 151, 147, 0.3);
+  color: hsl(var(--foreground)) !important;
+}
+
+.dark .custom-blocknote-theme {
+  --bn-colors-editor-background: transparent;
+  --bn-colors-surface: transparent;
+  --bn-colors-menu-background: hsl(var(--background));
+  --bn-colors-tooltip-background: hsl(var(--background));
 }
 
 .custom-blocknote-theme a {
-  color: #2563eb !important; /* Tailwind blue-600 */
+  color: hsl(var(--accent-fg, 217 91.2% 59.8%)) !important; /* Tailwind blue-600 fallback */
   text-decoration: none;
 }
 
 .custom-blocknote-theme a:hover {
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+/* Additional BlockNote overrides */
+.custom-blocknote-theme .bn-container,
+.custom-blocknote-theme .bn-editor,
+.custom-blocknote-theme .bn-content,
+.custom-blocknote-theme .bn-block,
+.custom-blocknote-theme .bn-block-content {
+  background-color: transparent !important;
+}
+
+/* BlockNote Text Styling */
+.custom-blocknote-theme .bn-inline-content,
+.custom-blocknote-theme .bn-paragraph,
+.custom-blocknote-theme .bn-heading-1,
+.custom-blocknote-theme .bn-heading-2,
+.custom-blocknote-theme .bn-heading-3 {
+  color: black !important;
+}
+
+.dark .custom-blocknote-theme .bn-inline-content,
+.dark .custom-blocknote-theme .bn-paragraph,
+.dark .custom-blocknote-theme .bn-heading-1,
+.dark .custom-blocknote-theme .bn-heading-2,
+.dark .custom-blocknote-theme .bn-heading-3 {
+  color: white !important;
+}
+
+/* Table styling for proper dark mode support */
+.custom-blocknote-theme table,
+.custom-blocknote-theme th,
+.custom-blocknote-theme td,
+.custom-blocknote-theme tr {
+  color: black !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+.dark .custom-blocknote-theme table,
+.dark .custom-blocknote-theme th,
+.dark .custom-blocknote-theme td,
+.dark .custom-blocknote-theme tr {
+  color: white !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+/* Specific overrides for blue list numbering */
+.custom-blocknote-theme div[data-list-type="numbered"] [contenteditable="false"],
+.custom-blocknote-theme div[data-content-type="numberedList"] [contenteditable="false"],
+.custom-blocknote-theme [class*="numberedList"] [contenteditable="false"],
+.custom-blocknote-theme [class*="bulletList"] [contenteditable="false"],
+.custom-blocknote-theme .bn-list-item__marker,
+.custom-blocknote-theme [class*="ListItem"] [contenteditable="false"] {
+  color: black !important;
+  opacity: 1 !important;
+}
+
+.dark .custom-blocknote-theme div[data-list-type="numbered"] [contenteditable="false"],
+.dark .custom-blocknote-theme div[data-content-type="numberedList"] [contenteditable="false"],
+.dark .custom-blocknote-theme [class*="numberedList"] [contenteditable="false"],
+.dark .custom-blocknote-theme [class*="bulletList"] [contenteditable="false"],
+.dark .custom-blocknote-theme .bn-list-item__marker,
+.dark .custom-blocknote-theme [class*="ListItem"] [contenteditable="false"] {
+  color: white !important;
+  opacity: 1 !important;
+}
+
+/* Add a higher-priority rule that will be applied last */
+body .custom-blocknote-theme [contenteditable="false"] {
+  color: inherit !important;
+}
+
+body.dark .custom-blocknote-theme [contenteditable="false"] {
+  color: white !important;
+}
+
+body:not(.dark) .custom-blocknote-theme [contenteditable="false"] {
+  color: black !important;
 }

@@ -13,16 +13,19 @@ import { PasswordInput } from "../../ui/password-input";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {
   onLoginWithEmail: (input: LoginWithEmailInput) => Promise<void>;
+  onLoginWithOtp: (email: string) => Promise<void>;
   onLoginWithOauth: (provider: "google" | "github") => Promise<void>;
 }
 
 export function UserAuthForm({
   className,
   onLoginWithEmail,
+  onLoginWithOtp,
   onLoginWithOauth,
   ...props
 }: UserAuthFormProps) {
   const [isEmailPasswordLoading, setEmailPasswordIsLoading] = useState(false);
+  const [isOtpLoading, setIsOtpLoading] = useState(false);
   const [isGoogleLoading, setGoogleIsLoading] = useState(false);
   const [isGithubLoading, setGithubIsLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -30,7 +33,7 @@ export function UserAuthForm({
   const [showPasswordField, setShowPasswordField] = useState(false);
 
   const isLoading =
-    isEmailPasswordLoading || isGoogleLoading || isGithubLoading;
+    isEmailPasswordLoading || isOtpLoading || isGoogleLoading || isGithubLoading;
 
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
@@ -38,6 +41,13 @@ export function UserAuthForm({
 
     await onLoginWithEmail({ email, password });
     setEmailPasswordIsLoading(false);
+  }
+
+  async function handleOtpClick() {
+    if (!email) return;
+    setIsOtpLoading(true);
+    await onLoginWithOtp(email);
+    setIsOtpLoading(false);
   }
 
   return (
@@ -86,12 +96,26 @@ export function UserAuthForm({
               />
             </div>
           </div>
-          <Button disabled={isLoading}>
-            {isLoading && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            Login with Email
-          </Button>
+          <div className="flex flex-col gap-2">
+            <Button disabled={isLoading || !email || !password}>
+              {isEmailPasswordLoading && (
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Login with Password
+            </Button>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={handleOtpClick}
+              disabled={isLoading || !email}
+            >
+              {isOtpLoading && (
+                <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              <Icons.spinner className="mr-2 h-4 w-4" />
+              Send OTP Code
+            </Button>
+          </div>
         </div>
       </form>
       <div className="relative">

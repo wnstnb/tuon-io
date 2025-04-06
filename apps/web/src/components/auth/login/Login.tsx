@@ -3,14 +3,14 @@ import NextImage from "next/image";
 import Link from "next/link";
 import { buttonVariants } from "../../ui/button";
 import { UserAuthForm } from "./user-auth-form-login";
-import { login } from "./actions";
+import { login, loginWithOtp } from "./actions";
 import { createSupabaseClient } from "@/lib/supabase/client";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export interface LoginWithEmailInput {
   email: string;
-  password: string;
+  password?: string;
 }
 
 export function Login() {
@@ -37,6 +37,16 @@ export function Login() {
   ): Promise<void> => {
     setIsError(false);
     await login(input);
+  };
+
+  const onLoginWithOtp = async (email: string): Promise<void> => {
+    setIsError(false);
+    try {
+      await loginWithOtp(email, window.location.origin);
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+      setIsError(true);
+    }
   };
 
   const onLoginWithOauth = async (
@@ -94,6 +104,7 @@ export function Login() {
           </div>
           <UserAuthForm
             onLoginWithEmail={onLoginWithEmail}
+            onLoginWithOtp={onLoginWithOtp}
             onLoginWithOauth={onLoginWithOauth}
           />
           {isError && (

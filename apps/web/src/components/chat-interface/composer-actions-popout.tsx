@@ -83,7 +83,7 @@ export function ComposerActionsPopOut(props: ComposerActionsPopOutProps) {
       }}
     >
       <motion.div
-        className="rounded-full flex items-center h-8 justify-start px-2 py-5 bg-blue-50 overflow-hidden"
+        className="rounded-full flex items-center h-8 justify-start px-2 py-5 bg-secondary/80 overflow-hidden"
         variants={containerVariants}
         animate={isExpanded ? "expanded" : "collapsed"}
         initial="collapsed"
@@ -99,7 +99,7 @@ export function ComposerActionsPopOut(props: ComposerActionsPopOutProps) {
             <TooltipIconButton
               tooltip="Web search"
               variant="ghost"
-              className="size-7 flex-shrink-0 bg-blue-100 hover:bg-blue-100"
+              className="size-7 flex-shrink-0 bg-secondary hover:bg-secondary/90"
               onClick={() => setSearchEnabled((p) => !p)}
             >
               <Globe />
@@ -109,7 +109,7 @@ export function ComposerActionsPopOut(props: ComposerActionsPopOutProps) {
             <AssistantSelect
               userId={props.userId}
               chatStarted={props.chatStarted}
-              className="bg-blue-100 hover:bg-blue-100 transition-colors ease-in-out"
+              className="bg-secondary hover:bg-secondary/90 transition-colors ease-in-out"
               onOpenChange={(isOpen) => {
                 setIsAssistantSelectOpen(isOpen);
                 if (!isOpen && !isMouseOver) {
@@ -133,7 +133,7 @@ export function ComposerActionsPopOut(props: ComposerActionsPopOutProps) {
                 <TooltipIconButton
                   tooltip="Web search"
                   variant="ghost"
-                  className="size-7 flex-shrink-0 hover:bg-blue-100 transition-colors ease-in-out"
+                  className="size-7 flex-shrink-0 hover:bg-secondary/90 transition-colors ease-in-out"
                   onClick={() => setSearchEnabled((p) => !p)}
                 >
                   <Globe />
@@ -143,7 +143,7 @@ export function ComposerActionsPopOut(props: ComposerActionsPopOutProps) {
                 <AssistantSelect
                   userId={props.userId}
                   chatStarted={props.chatStarted}
-                  className="hover:bg-blue-100 transition-colors ease-in-out"
+                  className="hover:bg-secondary/90 transition-colors ease-in-out"
                   onOpenChange={(isOpen) => {
                     setIsAssistantSelectOpen(isOpen);
                     if (!isOpen && !isMouseOver) {
@@ -152,7 +152,7 @@ export function ComposerActionsPopOut(props: ComposerActionsPopOutProps) {
                   }}
                 />
               )}
-              <ComposerAddAttachment className="hover:bg-blue-100 transition-colors ease-in-out" />
+              <ComposerAddAttachment className="hover:bg-secondary/90 transition-colors ease-in-out" />
             </motion.div>
           )}
         </AnimatePresence>

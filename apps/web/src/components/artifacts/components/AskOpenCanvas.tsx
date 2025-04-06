@@ -78,7 +78,7 @@ export const AskOpenCanvas = forwardRef<HTMLDivElement, AskOpenCanvasProps>(
       <div
         ref={ref}
         className={cn(
-          "absolute bg-white border border-gray-200 shadow-md p-2 flex gap-2",
+          "absolute bg-background border border-border shadow-md p-2 flex gap-2",
           isInputVisible ? "rounded-3xl" : "rounded-md"
         )}
         style={{
@@ -109,8 +109,8 @@ export const AskOpenCanvas = forwardRef<HTMLDivElement, AskOpenCanvasProps>(
             >
               <CircleArrowUp
                 className="cursor-pointer"
-                fill="black"
-                stroke="white"
+                fill="currentColor"
+                stroke="hsl(var(--background))"
                 size={30}
               />
             </Button>
@@ -119,7 +119,7 @@ export const AskOpenCanvas = forwardRef<HTMLDivElement, AskOpenCanvasProps>(
           <Button
             variant="ghost"
             onClick={() => setIsInputVisible(true)}
-            className="transition-all duration-300 ease-in-out w-full"
+            className="transition-all duration-300 ease-in-out w-full text-foreground"
           >
             Ask Open Canvas
           </Button>

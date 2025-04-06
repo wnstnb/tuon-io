@@ -9,6 +9,7 @@ import { ReflectionsDialog } from "../reflections-dialog/ReflectionsDialog";
 import { useLangSmithLinkToolUI } from "../tool-hooks/LangSmithLinkToolUI";
 import { TooltipIconButton } from "../ui/assistant-ui/tooltip-icon-button";
 import { TighterText } from "../ui/header";
+import { ThemeToggle } from "../ui/theme-toggle";
 import { Composer } from "./composer";
 import { AssistantMessage, UserMessage } from "./messages";
 import ModelSelector from "./model-selector";
@@ -17,6 +18,7 @@ import { ThreadWelcome } from "./welcome";
 import { useUserContext } from "@/contexts/UserContext";
 import { useThreadContext } from "@/contexts/ThreadProvider";
 import { useAssistantContext } from "@/contexts/AssistantContext";
+import { Alert, AlertDescription } from "../ui/alert";
 
 const ThreadScrollToBottom: FC = () => {
   return (
@@ -54,7 +56,13 @@ export const Thread: FC<ThreadProps> = (props: ThreadProps) => {
   } = props;
   const { toast } = useToast();
   const {
-    graphData: { clearState, runId, feedbackSubmitted, setFeedbackSubmitted },
+    graphData: { 
+      clearState, 
+      runId, 
+      feedbackSubmitted, 
+      setFeedbackSubmitted,
+      threadSwitched 
+    },
   } = useGraphContext();
   const { selectedAssistant } = useAssistantContext();
   const {
@@ -93,7 +101,7 @@ export const Thread: FC<ThreadProps> = (props: ThreadProps) => {
   return (
     <ThreadPrimitive.Root className="flex flex-col h-full w-full">
       <div className="pr-3 pl-6 pt-3 pb-2 flex flex-row gap-4 items-center justify-between">
-        <div className="flex items-center justify-start gap-2 text-gray-600">
+        <div className="flex items-center justify-start gap-2 text-foreground">
           <ThreadHistory
             switchSelectedThreadCallback={switchSelectedThreadCallback}
           />
@@ -110,6 +118,7 @@ export const Thread: FC<ThreadProps> = (props: ThreadProps) => {
         </div>
         {hasChatStarted ? (
           <div className="flex flex-row flex-1 gap-2 items-center justify-end">
+            <ThemeToggle />
             <TooltipIconButton
               tooltip="Collapse Chat"
               variant="ghost"
@@ -117,7 +126,7 @@ export const Thread: FC<ThreadProps> = (props: ThreadProps) => {
               delayDuration={400}
               onClick={() => props.setChatCollapsed(true)}
             >
-              <PanelRightOpen className="text-gray-600" />
+              <PanelRightOpen className="text-foreground" />
             </TooltipIconButton>
             <TooltipIconButton
               tooltip="New chat"
@@ -126,11 +135,12 @@ export const Thread: FC<ThreadProps> = (props: ThreadProps) => {
               delayDuration={400}
               onClick={handleNewSession}
             >
-              <SquarePen className="text-gray-600" />
+              <SquarePen className="text-foreground" />
             </TooltipIconButton>
           </div>
         ) : (
           <div className="flex flex-row gap-2 items-center">
+            <ThemeToggle />
             <ReflectionsDialog selectedAssistant={selectedAssistant} />
           </div>
         )}
@@ -148,6 +158,13 @@ export const Thread: FC<ThreadProps> = (props: ThreadProps) => {
             }
             searchEnabled={props.searchEnabled}
           />
+        )}
+        {threadSwitched && hasChatStarted && (
+          <Alert className="mb-4">
+            <AlertDescription>
+              Showing the most recent conversation for this document. Previous messages may have been truncated.
+            </AlertDescription>
+          </Alert>
         )}
         <ThreadPrimitive.Messages
           components={{

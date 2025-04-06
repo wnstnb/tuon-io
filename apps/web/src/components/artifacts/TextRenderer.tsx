@@ -1,4 +1,6 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+"use client";
+
+import { Dispatch, SetStateAction, useEffect, useRef, useState, useMemo } from "react";
 import { ArtifactMarkdownV3 } from "@opencanvas/shared/types";
 import "@blocknote/core/fonts/inter.css";
 import {
@@ -18,6 +20,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
 import { Textarea } from "../ui/textarea";
 import { cn } from "@/lib/utils";
+import useLocalStorage from "@/hooks/useLocalStorage";
 
 const cleanText = (text: string) => {
   return text.replaceAll("\\\n", "\n");
@@ -44,9 +47,9 @@ function ViewRawText({
         onClick={() => setIsRawView((p) => !p)}
       >
         {isRawView ? (
-          <EyeOff className="w-5 h-5 text-gray-600" />
+          <EyeOff className="w-5 h-5 text-foreground" />
         ) : (
-          <Eye className="w-5 h-5 text-gray-600" />
+          <Eye className="w-5 h-5 text-foreground" />
         )}
       </TooltipIconButton>
     </motion.div>
@@ -71,6 +74,8 @@ export function TextRendererComponent(props: TextRendererProps) {
     setSelectedBlocks,
     setUpdateRenderedArtifactRequired,
   } = graphData;
+  const [theme] = useLocalStorage<"light" | "dark">("theme", "light");
+  const isDarkMode = theme === "dark";
 
   const [rawMarkdown, setRawMarkdown] = useState("");
   const [isRawView, setIsRawView] = useState(false);
@@ -246,8 +251,99 @@ export function TextRendererComponent(props: TextRendererProps) {
     });
   };
 
+  // Initialize and set up a dedicated function to handle editor initialization and list marker styling
+  useEffect(() => {
+    const handleBlockNoteInit = () => {
+      // Force all editor content to have proper theme coloring
+      const listHandler = () => {
+        // Get all list markers in the editor
+        const allElements = document.querySelectorAll('.custom-blocknote-theme [contenteditable="false"]');
+        
+        // Apply color to each marker element based on current theme
+        allElements.forEach(element => {
+          if (element instanceof HTMLElement) {
+            // Direct style override for list markers and numbers
+            element.style.setProperty('color', isDarkMode ? 'white' : 'black', 'important');
+            element.style.setProperty('opacity', '1', 'important');
+          }
+        });
+      };
+      
+      // Run immediately
+      listHandler();
+      
+      // Run again after a short delay to catch any delayed rendering
+      setTimeout(listHandler, 100);
+      setTimeout(listHandler, 500);
+      
+      // Set up a mutation observer to watch for changes in the DOM
+      // This will ensure newly rendered elements also get the correct styling
+      const observer = new MutationObserver(listHandler);
+      
+      // Start observing once the blocknote container is available
+      const startObserving = () => {
+        const blockNoteContainer = document.querySelector('.custom-blocknote-theme');
+        if (blockNoteContainer) {
+          observer.observe(blockNoteContainer, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['class', 'style', 'contenteditable']
+          });
+          return true;
+        }
+        return false;
+      };
+      
+      // Try to start observing immediately
+      if (!startObserving()) {
+        // If container isn't available yet, try again after a short delay
+        setTimeout(startObserving, 200);
+      }
+      
+      // Add the handler to run on theme changes and content changes
+      window.addEventListener('themechange', listHandler);
+      
+      return () => {
+        window.removeEventListener('themechange', listHandler);
+        observer.disconnect();
+      };
+    };
+    
+    // Run the initialization function
+    const cleanup = handleBlockNoteInit();
+    
+    // Cleanup when component unmounts
+    return cleanup;
+  }, [editor, isDarkMode]); // Run when editor or theme changes
+
+  // Inject high-priority styles directly into head
+  useEffect(() => {
+    // Remove any previous injected style to avoid duplication
+    const existingStyle = document.getElementById('blocknote-override-styles');
+    if (existingStyle) {
+      existingStyle.remove();
+    }
+    
+    // Create and inject new style element
+    const styleEl = document.createElement('style');
+    styleEl.id = 'blocknote-override-styles';
+    styleEl.innerHTML = `
+      /* Highest possible specificity for list markers */
+      html body .custom-blocknote-theme .bn-list-item__marker,
+      html body .custom-blocknote-theme [contenteditable="false"],
+      html body .custom-blocknote-theme [class*="ListItem"] [contenteditable="false"],
+      html body .custom-blocknote-theme [class*="numberedList"] *,
+      html body .custom-blocknote-theme [class*="bulletList"] * {
+        color: ${isDarkMode ? 'white' : 'black'} !important;
+        opacity: 1 !important;
+      }
+    `;
+    document.head.appendChild(styleEl);
+  }, [isDarkMode]);
+
   return (
-    <div className="w-full h-full mt-2 flex flex-col border-t-[1px] border-gray-200 overflow-y-auto py-5 relative">
+    <div className="w-full h-full mt-2 flex flex-col border-t-[1px] border-border overflow-y-auto py-5 relative" style={{ backgroundColor: 'transparent' }}>
       {props.isHovering && artifact && (
         <div className="absolute flex gap-2 top-2 right-4 z-10">
           <CopyText currentArtifactContent={getArtifactContent(artifact)} />
@@ -256,52 +352,60 @@ export function TextRendererComponent(props: TextRendererProps) {
       )}
       {isRawView ? (
         <Textarea
-          className="whitespace-pre-wrap font-mono text-sm px-[54px] border-0 shadow-none h-full outline-none ring-0 rounded-none  focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="whitespace-pre-wrap font-mono text-sm px-[54px] border-0 shadow-none h-full outline-none ring-0 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0"
           value={rawMarkdown}
           onChange={onChangeRawMarkdown}
         />
       ) : (
         <>
-          <style jsx global>{`
-            .pulse-text .bn-block-group {
-              animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-            }
-
-            @keyframes pulse {
-              0%,
-              100% {
-                opacity: 1;
-              }
-              50% {
-                opacity: 0.3;
-              }
+          <style jsx>{`
+            .darkModeOnly,
+            .lightModeOnly {
+              border-radius: 0.375rem;
             }
           `}</style>
-          <BlockNoteView
-            theme="light"
-            formattingToolbar={false}
-            slashMenu={false}
-            onCompositionStartCapture={() => (isComposition.current = true)}
-            onCompositionEndCapture={() => (isComposition.current = false)}
-            onChange={onChange}
-            editable={
-              !isStreaming || props.isEditing || !manuallyUpdatingArtifact
-            }
-            editor={editor}
+          <div
             className={cn(
-              isStreaming && !firstTokenReceived ? "pulse-text" : "",
-              "custom-blocknote-theme"
+              "w-full",
+              isDarkMode ? "darkModeOnly" : "lightModeOnly",
+              "bg-background"
             )}
           >
-            <SuggestionMenuController
-              getItems={async () =>
-                getDefaultReactSlashMenuItems(editor).filter(
-                  (z) => z.group !== "Media"
-                )
+            <BlockNoteView 
+              key={`blocknote-${isDarkMode ? 'dark' : 'light'}`}
+              editor={editor}
+              theme={isDarkMode ? "dark" : "light"}
+              className="custom-blocknote-theme"
+              formattingToolbar={false}
+              slashMenu={false}
+              onCompositionStartCapture={() => (isComposition.current = true)}
+              onCompositionEndCapture={() => (isComposition.current = false)}
+              onChange={onChange}
+              editable={
+                !isStreaming || props.isEditing || !manuallyUpdatingArtifact
               }
-              triggerCharacter={"/"}
-            />
-          </BlockNoteView>
+              style={{
+                color: isDarkMode ? 'white' : 'black',
+                '--bn-colors-text': isDarkMode ? 'white' : 'black',
+                '--bn-colors-default-text': isDarkMode ? 'white' : 'black',
+                '--bn-colors-surface': 'transparent',
+                '--bn-colors-editor-text': isDarkMode ? 'white' : 'black',
+                '--bn-colors-editor-default-text': isDarkMode ? 'white' : 'black',
+                '--bn-colors-list-text': isDarkMode ? 'white' : 'black',
+                '--bn-colors-list-marker': isDarkMode ? 'white' : 'black',
+                '--bn-colors-inline-text': isDarkMode ? 'white' : 'black'
+              } as React.CSSProperties}
+            >
+              <SuggestionMenuController
+                getItems={async () =>
+                  getDefaultReactSlashMenuItems(editor).filter(
+                    (z) => z.group !== "Media"
+                  )
+                }
+                triggerCharacter={"/"}
+              />
+            </BlockNoteView>
+          </div>
         </>
       )}
     </div>

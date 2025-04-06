@@ -195,8 +195,8 @@ export function CustomQuickActions(props: CustomQuickActionsProps) {
             className={cn(
               "w-[26px] h-[26px]",
               props.isTextSelected
-                ? "text-gray-400"
-                : "hover:text-gray-900 transition-colors"
+                ? "text-muted-foreground"
+                : "text-foreground transition-colors"
             )}
           />
         </TooltipIconButton>

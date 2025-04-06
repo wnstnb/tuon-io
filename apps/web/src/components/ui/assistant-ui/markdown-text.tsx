@@ -101,13 +101,19 @@ const MarkdownTextImpl = () => {
         ),
         ul: ({ node: _node, className, ...props }) => (
           <ul
-            className={cn("my-5 ml-6 list-disc [&>li]:mt-2", className)}
+            className={cn(
+              "my-5 ml-6 list-disc [&>li]:mt-2 text-foreground [&>li::marker]:text-foreground",
+              className
+            )}
             {...props}
           />
         ),
         ol: ({ node: _node, className, ...props }) => (
           <ol
-            className={cn("my-5 ml-6 list-decimal [&>li]:mt-2", className)}
+            className={cn(
+              "my-5 ml-6 list-decimal [&>li]:mt-2 text-foreground [&>li::marker]:text-foreground",
+              className
+            )}
             {...props}
           />
         ),
@@ -117,7 +123,7 @@ const MarkdownTextImpl = () => {
         table: ({ node: _node, className, ...props }) => (
           <table
             className={cn(
-              "my-5 w-full border-separate border-spacing-0 overflow-y-auto",
+              "my-5 w-full border-separate border-spacing-0 overflow-y-auto text-foreground",
               className
             )}
             {...props}
@@ -126,7 +132,7 @@ const MarkdownTextImpl = () => {
         th: ({ node: _node, className, ...props }) => (
           <th
             className={cn(
-              "bg-muted px-4 py-2 text-left font-bold first:rounded-tl-lg last:rounded-tr-lg [&[align=center]]:text-center [&[align=right]]:text-right",
+              "bg-muted px-4 py-2 text-left font-bold first:rounded-tl-lg last:rounded-tr-lg [&[align=center]]:text-center [&[align=right]]:text-right text-foreground",
               className
             )}
             {...props}
@@ -135,7 +141,7 @@ const MarkdownTextImpl = () => {
         td: ({ node: _node, className, ...props }) => (
           <td
             className={cn(
-              "border-b border-l px-4 py-2 text-left last:border-r [&[align=center]]:text-center [&[align=right]]:text-right",
+              "border-b border-l border-border px-4 py-2 text-left last:border-r [&[align=center]]:text-center [&[align=right]]:text-right text-foreground",
               className
             )}
             {...props}
@@ -144,7 +150,7 @@ const MarkdownTextImpl = () => {
         tr: ({ node: _node, className, ...props }) => (
           <tr
             className={cn(
-              "m-0 border-b p-0 first:border-t [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg",
+              "m-0 border-b border-border p-0 first:border-t [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg text-foreground",
               className
             )}
             {...props}
