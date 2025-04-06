@@ -1,4 +1,4 @@
-import { ChatAnthropic } from "@langchain/anthropic";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { WebSearchState } from "../state.js";
 import z from "zod";
 
@@ -24,8 +24,8 @@ const classificationSchema = z
 export async function classifyMessage(
   state: WebSearchState
 ): Promise<Partial<WebSearchState>> {
-  const model = new ChatAnthropic({
-    model: "claude-3-5-sonnet-latest",
+  const model = new ChatGoogleGenerativeAI({
+    model: "gemini-2.0-flash",
     temperature: 0,
   }).withStructuredOutput(classificationSchema, {
     name: "classify_message",

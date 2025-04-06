@@ -154,6 +154,7 @@ export function ThreadProvider({ children }: { children: ReactNode }) {
         metadata: {
           supabase_user_id: user.id,
           customModelName: modelName,
+          tags: [],
           modelConfig: {
             ...modelConfig,
             // Ensure Azure config is included if needed

@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { ChatAnthropic } from "@langchain/anthropic";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { WebSearchState } from "../state.js";
 import { formatMessages } from "../../utils.js";
 
@@ -24,8 +24,8 @@ Respond ONLY with the search query, and nothing else.`;
 export async function queryGenerator(
   state: WebSearchState
 ): Promise<Partial<WebSearchState>> {
-  const model = new ChatAnthropic({
-    model: "claude-3-5-sonnet-latest",
+  const model = new ChatGoogleGenerativeAI({
+    model: "gemini-2.0-flash",
     temperature: 0,
   });
 

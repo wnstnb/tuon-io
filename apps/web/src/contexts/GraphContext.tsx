@@ -93,6 +93,7 @@ interface GraphData {
   switchSelectedThread: (thread: Thread) => void;
   setUpdateRenderedArtifactRequired: Dispatch<SetStateAction<boolean>>;
   updateArtifact: (artifactToUpdate: ArtifactV3, threadId: string) => Promise<void>;
+  updateThreadTags: (threadId: string, tags: string[]) => Promise<void>;
 }
 
 type GraphContentType = {
@@ -1428,6 +1429,46 @@ export function GraphProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  const updateThreadTags = async (threadId: string, tags: string[]) => {
+    if (!threadId) return;
+
+    try {
+      const client = createClient();
+      const thread = await client.threads.get(threadId);
+      
+      if (!thread) {
+        toast({
+          title: "Error",
+          description: "Thread not found",
+          variant: "destructive",
+          duration: 5000,
+        });
+        return;
+      }
+      
+      // Update the thread metadata to include the tags
+      await client.threads.update(threadId, {
+        metadata: {
+          ...thread.metadata,
+          tags: tags,
+        },
+      });
+      
+      // Update the current thread in context if it's the active thread
+      if (threadData.threadId === threadId) {
+        threadData.getUserThreads();
+      }
+    } catch (e) {
+      console.error("Failed to update thread tags", e);
+      toast({
+        title: "Error",
+        description: "Failed to update tags",
+        variant: "destructive",
+        duration: 5000,
+      });
+    }
+  };
+
   const contextValue: GraphContentType = {
     graphData: {
       runId,
@@ -1459,6 +1500,7 @@ export function GraphProvider({ children }: { children: ReactNode }) {
       switchSelectedThread,
       setUpdateRenderedArtifactRequired,
       updateArtifact,
+      updateThreadTags,
     },
   };
 
