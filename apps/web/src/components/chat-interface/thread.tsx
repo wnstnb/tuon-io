@@ -162,7 +162,7 @@ export const Thread: FC<ThreadProps> = (props: ThreadProps) => {
         {threadSwitched && hasChatStarted && (
           <Alert className="mb-4">
             <AlertDescription>
-              Showing the most recent conversation for this document. Previous messages may have been truncated.
+              Showing the most recent conversation for this document. For the complete conversation history, click "Documents" and select "Show All Conversations".
             </AlertDescription>
           </Alert>
         )}

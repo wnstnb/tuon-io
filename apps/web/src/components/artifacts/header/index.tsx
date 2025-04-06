@@ -38,11 +38,13 @@ export function ArtifactHeader(props: ArtifactHeaderProps) {
             <PanelRightClose className="text-foreground" />
           </TooltipIconButton>
         )}
-        <ArtifactTitle
-          title={props.currentArtifactContent.title}
-          isArtifactSaved={props.isArtifactSaved}
-          artifactUpdateFailed={props.artifactUpdateFailed}
-        />
+        <div className="group">
+          <ArtifactTitle
+            title={props.currentArtifactContent.title}
+            isArtifactSaved={props.isArtifactSaved}
+            artifactUpdateFailed={props.artifactUpdateFailed}
+          />
+        </div>
         {threadSwitched && (
           <Badge variant="outline" className="ml-2">Historical Document</Badge>
         )}

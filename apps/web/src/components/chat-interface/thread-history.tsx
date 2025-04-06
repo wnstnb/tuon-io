@@ -179,48 +179,64 @@ const groupThreads = (
   const yesterday = subDays(today, 1);
   const sevenDaysAgo = subDays(today, 7);
 
-  // Convert all threads to ThreadProps first
-  const allThreadProps = threads.map((t) =>
-    convertThreadActualToThreadProps(
-      t,
-      switchSelectedThreadCallback,
-      deleteThread
-    )
-  );
-
-  // Create a map to deduplicate by title and keep only the most recent version
-  const uniqueDocumentMap = new Map<string, ThreadProps>();
-  
-  // Since we'll sort each group by date, deduplicate before grouping
-  allThreadProps.forEach((thread) => {
-    const title = thread.documentTitle || thread.label;
-    if (!uniqueDocumentMap.has(title) || 
-        uniqueDocumentMap.get(title)!.createdAt < thread.createdAt) {
-      uniqueDocumentMap.set(title, thread);
-    }
-  });
-  
-  // Convert back to an array of unique threads
-  const uniqueThreadProps = Array.from(uniqueDocumentMap.values());
-
   return {
-    today: uniqueThreadProps
-      .filter((thread) => isToday(thread.createdAt))
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
-    yesterday: uniqueThreadProps
-      .filter((thread) => isYesterday(thread.createdAt))
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
-    lastSevenDays: uniqueThreadProps
+    today: threads
+      .filter((thread) => isToday(new Date(thread.created_at)))
+      .sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      )
+      .map((t) =>
+        convertThreadActualToThreadProps(
+          t,
+          switchSelectedThreadCallback,
+          deleteThread
+        )
+      ),
+    yesterday: threads
+      .filter((thread) => isYesterday(new Date(thread.created_at)))
+      .sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      )
+      .map((t) =>
+        convertThreadActualToThreadProps(
+          t,
+          switchSelectedThreadCallback,
+          deleteThread
+        )
+      ),
+    lastSevenDays: threads
       .filter((thread) =>
-        isWithinInterval(thread.createdAt, {
+        isWithinInterval(new Date(thread.created_at), {
           start: sevenDaysAgo,
           end: yesterday,
         })
       )
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
-    older: uniqueThreadProps
-      .filter((thread) => thread.createdAt < sevenDaysAgo)
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()),
+      .sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      )
+      .map((t) =>
+        convertThreadActualToThreadProps(
+          t,
+          switchSelectedThreadCallback,
+          deleteThread
+        )
+      ),
+    older: threads
+      .filter((thread) => new Date(thread.created_at) < sevenDaysAgo)
+      .sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      )
+      .map((t) =>
+        convertThreadActualToThreadProps(
+          t,
+          switchSelectedThreadCallback,
+          deleteThread
+        )
+      ),
   };
 };
 
@@ -365,7 +381,7 @@ export function ThreadHistoryComponent(props: ThreadHistoryProps) {
         <SheetTitle>
           <div className="flex justify-between items-center">
             <TighterText className="px-2 text-lg text-gray-600">
-              Documents
+              {groupByType ? "Documents" : "Conversation History"}
             </TighterText>
             <Button 
               variant="ghost" 
@@ -373,7 +389,7 @@ export function ThreadHistoryComponent(props: ThreadHistoryProps) {
               onClick={() => setGroupByType(!groupByType)}
               className="text-xs"
             >
-              {groupByType ? "Group by Date" : "Group by Type"}
+              {groupByType ? "Show All Conversations" : "Show Unique Documents"}
             </Button>
           </div>
         </SheetTitle>

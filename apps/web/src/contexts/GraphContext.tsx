@@ -78,6 +78,7 @@ interface GraphData {
   chatStarted: boolean;
   searchEnabled: boolean;
   threadSwitched: boolean;
+  threadId: string | null;
   setSearchEnabled: Dispatch<SetStateAction<boolean>>;
   setChatStarted: Dispatch<SetStateAction<boolean>>;
   setIsStreaming: Dispatch<SetStateAction<boolean>>;
@@ -91,6 +92,7 @@ interface GraphData {
   clearState: () => void;
   switchSelectedThread: (thread: Thread) => void;
   setUpdateRenderedArtifactRequired: Dispatch<SetStateAction<boolean>>;
+  updateArtifact: (artifactToUpdate: ArtifactV3, threadId: string) => Promise<void>;
 }
 
 type GraphContentType = {
@@ -1442,6 +1444,7 @@ export function GraphProvider({ children }: { children: ReactNode }) {
       artifactUpdateFailed,
       searchEnabled,
       threadSwitched,
+      threadId: threadData.threadId,
       setSearchEnabled,
       setChatStarted,
       setIsStreaming,
@@ -1455,6 +1458,7 @@ export function GraphProvider({ children }: { children: ReactNode }) {
       clearState,
       switchSelectedThread,
       setUpdateRenderedArtifactRequired,
+      updateArtifact,
     },
   };
 
