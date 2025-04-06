@@ -403,6 +403,26 @@ const GEMINI_MODELS: ModelConfigurationParams[] = [
     isNew: true,
   },
   {
+    name: "gemini-2.5-pro-preview-03-25",
+    label: "Gemini 2.5 Pro",
+    config: {
+      provider: "google-genai",
+      temperatureRange: {
+        min: 0,
+        max: 1,
+        default: 0.5,
+        current: 0.5,
+      },
+      maxTokens: {
+        min: 1,
+        max: 1048576,
+        default: 4096,
+        current: 4096,
+      },
+    },
+    isNew: true,
+  },
+  {
     name: "gemini-2.0-flash-thinking-exp-01-21",
     label: "Gemini 2.0 Flash Thinking",
     config: {
@@ -425,12 +445,12 @@ const GEMINI_MODELS: ModelConfigurationParams[] = [
 ];
 
 export const LANGCHAIN_USER_ONLY_MODELS = [
-  "o1",
-  "gpt-4o",
+  // "o1",
+  // "gpt-4o",
   "gpt-4.5-preview",
-  "claude-3-5-sonnet-latest",
-  "claude-3-7-sonnet-latest",
-  "gemini-2.0-flash",
+  // "claude-3-5-sonnet-latest",
+  // "claude-3-7-sonnet-latest",
+  // "gemini-2.0-flash",
 ];
 
 // Models which do NOT support the temperature parameter.
@@ -439,6 +459,8 @@ export const TEMPERATURE_EXCLUDED_MODELS = ["o1-mini", "o3-mini", "o1"];
 // Models which do NOT stream back tool calls.
 export const NON_STREAMING_TOOL_CALLING_MODELS = [
   "gemini-2.0-flash-exp",
+  "gemini-2.5-pro-preview-03-25",
+  "gemini-2.0-flash",
   "gemini-1.5-flash",
 ];
 
@@ -446,6 +468,8 @@ export const NON_STREAMING_TOOL_CALLING_MODELS = [
 export const NON_STREAMING_TEXT_MODELS = [
   "o1",
   "gemini-2.0-flash-thinking-exp-01-21",
+  "gemini-2.5-pro-preview-03-25",
+  "gemini-2.0-flash",
 ];
 
 // Models which preform CoT before generating a final response.

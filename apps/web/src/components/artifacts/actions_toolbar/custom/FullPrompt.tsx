@@ -44,7 +44,7 @@ const HighlightToDeleteText = (props: HighlightToDeleteTextProps) => {
       }, 1250);
       return () => clearTimeout(timer);
     }
-  }, [props.highlight]);
+  });
 
   const handleClick = () => {
     setIsDeleting(true);

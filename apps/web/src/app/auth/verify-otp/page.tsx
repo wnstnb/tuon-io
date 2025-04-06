@@ -7,9 +7,10 @@ import { buttonVariants } from "@/components/ui/button";
 import { OtpVerificationForm } from "@/components/auth/otp/otp-verification-form";
 import { verifyOtp } from "@/components/auth/otp/actions";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 
-export default function VerifyOtpPage() {
+// Create a client component that uses useSearchParams()
+function VerifyOtpContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
   const [error, setError] = useState(false);
@@ -89,5 +90,22 @@ export default function VerifyOtpPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Create a fallback for when the content is loading
+function VerifyOtpFallback() {
+  return (
+    <div className="container flex items-center justify-center h-screen">
+      <div className="animate-pulse">Loading verification page...</div>
+    </div>
+  );
+}
+
+export default function VerifyOtpPage() {
+  return (
+    <Suspense fallback={<VerifyOtpFallback />}>
+      <VerifyOtpContent />
+    </Suspense>
   );
 } 

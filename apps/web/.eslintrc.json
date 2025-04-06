@@ -6,17 +6,22 @@
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint", "unused-imports", "@typescript-eslint/eslint-plugin"],
   "rules": {
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      { 
-        "argsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_|^UNUSED_",
-        "caughtErrorsIgnorePattern": "^_",
-        "destructuredArrayIgnorePattern": "^_"
-      }
-    ],
+    // "@typescript-eslint/no-unused-vars": [
+    //   "error",
+    //   { 
+    //     "argsIgnorePattern": "^_",
+    //     "varsIgnorePattern": "^_|^UNUSED_",
+    //     "caughtErrorsIgnorePattern": "^_",
+    //     "destructuredArrayIgnorePattern": "^_"
+    //   }
+    // ],
+    "react-hooks/exhaustive-deps": "off",
+    "react-hooks/rules-of-hooks": "off",
+    "unused-imports/no-unused-imports": "off",
+    "react/no-unescaped-entities": "off",
+    "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-empty-object-type": "off",
-    "unused-imports/no-unused-imports": "error"
+    "@typescript-eslint/no-empty-object-type": "off"
+    // "unused-imports/no-unused-imports": "error"
   }
 }

@@ -91,7 +91,7 @@ export function OtpVerificationForm({
       
       <div className="text-center text-sm">
         <span className="text-muted-foreground">
-          Didn't receive a code?{" "}
+          Didn't receive a code?{` `}
         </span>
         <Button 
           variant="link" 

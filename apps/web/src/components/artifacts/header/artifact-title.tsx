@@ -48,7 +48,7 @@ export function ArtifactTitle(props: ArtifactTitleProps) {
       const newArtifact = {
         ...graphData.artifact,
         contents: graphData.artifact.contents.map(content => {
-          if (content.index === graphData.artifact.currentIndex) {
+          if (content.index === graphData.artifact?.currentIndex) {
             return {
               ...content,
               title: editedTitle.trim()

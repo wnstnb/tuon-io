@@ -19,7 +19,7 @@ export default function Page() {
       }
     }
     signOut();
-  }, []);
+  }, [router]);
 
   return (
     <>
